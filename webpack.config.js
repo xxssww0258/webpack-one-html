@@ -101,12 +101,28 @@ webpackChain.module
                 .add(path.resolve(__dirname,'projects'))
                 .add(path.resolve(__dirname,'src'))
                 .end()
+            .exclude
+                .add(path.resolve(__dirname,'src/icons'))
+                .end()
             .use('file')
                 .loader('url-loader')
                 .options({
                     esModule: false
                 })
                 .end()
+                
+webpackChain.module
+    .rule('svgRule')
+        .test(/\.svg$/)
+            .include.add(path.resolve(__dirname,'src/icons'))
+            .end()
+            .use('svg-sprite-loader')
+            .loader('svg-sprite-loader')
+            .options({
+                symbolId:'icon-[name]'
+            })
+            .end()
+
 
 webpackChain // 也可以创建一个具名的插件!
     .plugin('CleanWebpackPlugin')

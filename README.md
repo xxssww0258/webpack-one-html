@@ -13,6 +13,7 @@
 + react
 + 指定入口项目打包
 + eslint+pritter+stylelint
++ svg-sprite
 
 ## 使用
 `yarn run build --project=[projectName]`  

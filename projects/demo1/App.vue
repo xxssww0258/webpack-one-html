@@ -1,5 +1,8 @@
 <template>
     <div>
+        <svg width="100" height="100" viewBox="0 0 100 100">
+            <use xlink:href="#icon-close" />
+        </svg>
         <img src="./img/Android@2x.png" alt="" />
         {{ msg }}
     </div>
