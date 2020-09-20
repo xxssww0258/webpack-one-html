@@ -40,10 +40,10 @@ webpackChain
 webpackChain.module
     .rule('vueRule')
         .test(/\.vue$/)
-            .include
-                .add(path.resolve(__dirname,'projects'))
-                .add(path.resolve(__dirname,'src'))
-                .end()
+            // .include
+            //     .add(path.resolve(__dirname,'projects'))
+            //     .add(path.resolve(__dirname,'src'))
+            //     .end()
             .use('vue-loader')
                 .loader('vue-loader')
                 .end()
@@ -51,10 +51,10 @@ webpackChain.module
 webpackChain.module
     .rule('reactRule')
         .test(/\.jsx$/i)
-            .include
-                .add(path.resolve(__dirname,'projects'))
-                .add(path.resolve(__dirname,'src'))
-                .end()
+            // .include
+            //     .add(path.resolve(__dirname,'projects'))
+            //     .add(path.resolve(__dirname,'src'))
+            //     .end()
             .use('react-babel-loader')
                 .loader('babel-loader')
                 .end()
@@ -63,10 +63,10 @@ webpackChain.module
 webpackChain.module
     .rule('cssRule')
         .test(/\.s?css$/i)
-            .include
-                .add(path.resolve(__dirname,'projects'))
-                .add(path.resolve(__dirname,'src'))
-                .end()
+            // .include
+            //     .add(path.resolve(__dirname,'projects'))
+            //     .add(path.resolve(__dirname,'src'))
+            //     .end()
             .use('vue-style-loader')
                 .loader('vue-style-loader')
                 .end()
@@ -82,14 +82,37 @@ webpackChain.module
             .use('sass-loader')
                 .loader('sass-loader')
                 .end()
+           
+webpackChain.module
+    .rule('lessRule')
+        .test(/\.less$/i)
+            // .include
+            //     .add(path.resolve(__dirname,'projects'))
+            //     .add(path.resolve(__dirname,'src'))
+            //     .end()
+            .use('vue-style-loader')
+                .loader('vue-style-loader')
+                .end()
+            .use('style-loader')
+                .loader('style-loader')
+                .end()
+            .use('css-loader')
+                .loader('css-loader')
+                .end()
+            .use('postcss-loader')
+                .loader('postcss-loader')
+                .end()
+            .use('less-loader')
+                .loader('less-loader')
+                .end()
 
 webpackChain.module
     .rule('jsRule')
         .test(/\.js$/i)
-            .include
-                .add(path.resolve(__dirname,'projects'))
-                .add(path.resolve(__dirname,'src'))
-                .end()
+            // .include
+            //     .add(path.resolve(__dirname,'projects'))
+            //     .add(path.resolve(__dirname,'src'))
+            //     .end()
             .use('babel')
                 .loader('babel-loader')
                 .end()
@@ -97,10 +120,10 @@ webpackChain.module
 webpackChain.module
     .rule('imgRule')
         .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/i)
-            .include
-                .add(path.resolve(__dirname,'projects'))
-                .add(path.resolve(__dirname,'src'))
-                .end()
+            // .include
+            //     .add(path.resolve(__dirname,'projects'))
+            //     .add(path.resolve(__dirname,'src'))
+            //     .end()
             .exclude
                 .add(path.resolve(__dirname,'src/icons'))
                 .end()
@@ -139,6 +162,8 @@ webpackChain.resolve
         .add('.js')
         .add('.jsx')
         .add('.vue')
+        .add('.less')
+        .add('.scss')
 
 // ---------------------------------------- webpack-dev-server ----------------------------------------
 if(argv['$0'].includes('webpack-dev-server')){
@@ -158,11 +183,11 @@ if(argv['$0'].includes('webpack-dev-server')){
     webpackChain.module
         .rule('imgRule')
             .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/i)
-                .include
-                    .add(path.resolve(__dirname,'projects'))
-                    .end()
+                // .include
+                //     .add(path.resolve(__dirname,'projects'))
+                //     .end()
                 .use('file')
-                    .loader('file-loader')
+                    .loader('file-loader') // 移除url-loader 避免打包base64
 
 }
                 
@@ -175,7 +200,7 @@ if(projectName == 'all'){
 }
 
 // console.log(JSON.stringify(webpackChain.toConfig(),null,'    '))
-// console.log(webpackChain.toConfig())
+// console.log(JSON.stringify(webpackChain.module.toConfig()),null,'    ')
     
 module.exports = webpackChain.toConfig();
 
@@ -195,6 +220,14 @@ function singleMain(projectName){
     webpackChain
         .output
         .path(path.resolve(__dirname,'dist',projectName))
+
+    // icons独立化
+    webpackChain.module
+        .rule('svgRule')
+            .include.add(path.join(projectPath,'icons'))
+    webpackChain.module
+        .rule('imgRule')
+            .exclude.add(path.join(projectPath,'icons'))
 
     webpackChain.plugin('HtmlWebpackPlugin')
         // 制造html
@@ -231,6 +264,14 @@ function multipleMain(){
                 .end()
                 .output
                     .path(path.resolve(__dirname,'dist','all'))
+
+        // icons独立化
+        webpackChain.module
+            .rule('svgRule')
+                .include.add(path.join(projectPath,'icons'))
+        webpackChain.module
+            .rule('imgRule')
+                .exclude.add(path.join(projectPath,'icons'))
     
             webpackChain.plugin(project+'_HtmlWebpackPlugin')
                 // 制造html

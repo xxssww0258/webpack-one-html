@@ -3,3 +3,4 @@ yarn.lock
 npm.lock
 .vscode/
 dist
+*.log

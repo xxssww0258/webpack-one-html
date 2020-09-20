@@ -6,6 +6,7 @@
 目前实现
 + css
 + scss
++ less
 + autoprefixer
 + babel
 + 图片转base64
@@ -13,7 +14,7 @@
 + react
 + 指定入口项目打包
 + eslint+pritter+stylelint
-+ svg-sprite
++ svg-sprite(各自项目内的icons文件夹  和 src/icons的通用统一文件夹)
 
 ## 使用
 `yarn run build --project=[projectName]`  
