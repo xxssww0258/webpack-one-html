@@ -12,6 +12,7 @@ const config = require('./config'); // 配置文件
 
 // 参数校验
 const projectName = argv.project;
+const mode = argv.mode;
 // console.log("argv", argv)
 const mainDir = path.resolve(__dirname,'./projects')
 const hasProject = fs.readdirSync(mainDir).includes(projectName)
@@ -22,8 +23,10 @@ if(!hasProject && projectName !== 'all'){
     process.exit(1)
 }
 
-webpackChain.mode(config.mode)
-webpackChain.devtool(config.devtool);
+webpackChain.mode(mode || config.mode)
+if(config.devtool !== undefined){
+    webpackChain.devtool(config.devtool);
+}
 
 // ---------------------------------------- common ----------------------------------------
 webpackChain
@@ -201,7 +204,7 @@ if(projectName == 'all'){
 
 // console.log(JSON.stringify(webpackChain.toConfig(),null,'    '))
 // console.log(JSON.stringify(webpackChain.module.toConfig()),null,'    ')
-    
+
 module.exports = webpackChain.toConfig();
 
 
