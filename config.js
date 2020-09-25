@@ -1,10 +1,11 @@
-module.exports = {    
+module.exports = {
     // mode:'production',
-    mode:'development',
+    // mode:'development',
     publicPath:'./',
-    devtool:'source-map',
+    devtool:'source-map',// 注释掉 就是 (none)
     // devtool:'cheap-module-eval-source-map',
 
+    isRem2Px:true,// 需要手动指定 html font-size
     server:{
         // host: "0.0.0.0",
         // contentBase:'.',

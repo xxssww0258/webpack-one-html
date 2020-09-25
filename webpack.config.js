@@ -23,7 +23,7 @@ if(!hasProject && projectName !== 'all'){
     process.exit(1)
 }
 
-webpackChain.mode(mode || config.mode)
+webpackChain.mode( config.mode || mode )
 if(config.devtool !== undefined){
     webpackChain.devtool(config.devtool);
 }
