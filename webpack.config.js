@@ -175,7 +175,7 @@ if(argv['$0'].includes('webpack-dev-server')){
     webpackChain
         .devServer
             .port(config.server.port)
-            .publicPath('/')
+            .publicPath('/') // 仅在需要提供静态文件时才进行配置
             .hot(true)
             .inline(true)
             .open(config.server.open)
@@ -259,6 +259,9 @@ function singleMain(projectName){
                     //     gitignore: true,
                     //     // ignore:  ['**/file.*', '**/ignored-directory/**'],
                     // },
+                },{
+                    from:path.resolve(__dirname,'src/static'),
+                    to: config.assetsSubDirectory,
                 }
             ]
         } ) )

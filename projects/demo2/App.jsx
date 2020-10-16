@@ -17,7 +17,8 @@ export default class App extends React.Component {
                 <br />
                 {this.state.name}
                 <img src={imgPath} alt="" srcSet="" />
-                <img src="/static/Android@2x.png" alt="" srcSet="" />
+                <img src="/static/Android@2x.png" alt="这个项目独自的公共文件src/static" srcSet="" />
+                <img src="/static/Android@3x.png" alt="这个是公共静态文件src/static" srcSet="" />
             </div>
         )
     }
