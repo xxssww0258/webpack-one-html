@@ -3,6 +3,7 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WebpackChain = require('webpack-chain');
 const webpackChain = new WebpackChain();
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -196,11 +197,11 @@ if(argv['$0'].includes('webpack-dev-server')){
                 
 
 // 打包所有项目
-if(projectName == 'all'){
-    multipleMain()
-}else{
+// if(projectName == 'all'){
+//     multipleMain()
+// }else{
     singleMain(projectName)
-}
+// }
 
 // console.log(JSON.stringify(webpackChain.toConfig(),null,'    '))
 // console.log(JSON.stringify(webpackChain.module.toConfig()),null,'    ')
@@ -246,6 +247,21 @@ function singleMain(projectName){
                 removeComments: true,// 删除html注释
             }
         }))
+    
+    webpackChain.plugin('CopyWebpackPlugin')
+        .use(new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.join(projectPath, 'static'),
+                    to: config.assetsSubDirectory,
+                    // globOptions: { // 目前issue上有bug 不能设置ignore
+                    //     dot: true,
+                    //     gitignore: true,
+                    //     // ignore:  ['**/file.*', '**/ignored-directory/**'],
+                    // },
+                }
+            ]
+        } ) )
 
     webpackChain.plugin('ScriptExtHtmlWebpackPlugin')
         .use(new ScriptExtHtmlWebpackPlugin({
@@ -253,48 +269,48 @@ function singleMain(projectName){
         }))
 }
 
-function multipleMain(){
-    const projectArr = fs.readdirSync(mainDir)
-    if(projectArr&&projectArr.length>0){
-        projectArr.map(project=>{
-            let projectPath = path.join(mainDir,project)
-            let main = path.join(mainDir,project,'main.js')
-            if(!fs.existsSync(main)){
-                throw Error('缺少入口文件')
-            }
-            webpackChain.entry(project)
-                .add(main)
-                .end()
-                .output
-                    .path(path.resolve(__dirname,'dist','all'))
+// function multipleMain(){
+//     const projectArr = fs.readdirSync(mainDir)
+//     if(projectArr&&projectArr.length>0){
+//         projectArr.map(project=>{
+//             let projectPath = path.join(mainDir,project)
+//             let main = path.join(mainDir,project,'main.js')
+//             if(!fs.existsSync(main)){
+//                 throw Error('缺少入口文件')
+//             }
+//             webpackChain.entry(project)
+//                 .add(main)
+//                 .end()
+//                 .output
+//                     .path(path.resolve(__dirname,'dist','all'))
 
-        // icons独立化
-        webpackChain.module
-            .rule('svgRule')
-                .include.add(path.join(projectPath,'icons'))
-        webpackChain.module
-            .rule('imgRule')
-                .exclude.add(path.join(projectPath,'icons'))
+//             // icons独立化
+//             webpackChain.module
+//                 .rule('svgRule')
+//                     .include.add(path.join(projectPath,'icons'))
+//             webpackChain.module
+//                 .rule('imgRule')
+//                     .exclude.add(path.join(projectPath,'icons'))
     
-            webpackChain.plugin(project+'_HtmlWebpackPlugin')
-                // 制造html
-                .use(new HtmlWebpackPlugin({
-                    template:path.join(projectPath,'index.html'),
-                    filename:project+'.html',
-                    // favicon:path.join(projectPath,'favicon.ico'),
-                    // templateParameters:{},
-                    chunks:[project],
-                    minify:{ 
-                        collapseWhitespace: true, // 压缩成一行
-                        removeComments: true,// 删除html注释
-                    }
-                }))
-            // 不支持多页面
-            // webpackChain.plugin('_ScriptExtHtmlWebpackPlugin')
-            //     .use(new ScriptExtHtmlWebpackPlugin({
-            //         inline:['demo1','demo2']
-            //     }))
+//             webpackChain.plugin(project+'_HtmlWebpackPlugin')
+//                 // 制造html
+//                 .use(new HtmlWebpackPlugin({
+//                     template:path.join(projectPath,'index.html'),
+//                     filename:project+'.html',
+//                     // favicon:path.join(projectPath,'favicon.ico'),
+//                     // templateParameters:{},
+//                     chunks:[project],
+//                     minify:{ 
+//                         collapseWhitespace: true, // 压缩成一行
+//                         removeComments: true,// 删除html注释
+//                     }
+//                 }))
+//             // 不支持多页面
+//             // webpackChain.plugin('_ScriptExtHtmlWebpackPlugin')
+//             //     .use(new ScriptExtHtmlWebpackPlugin({
+//             //         inline:['demo1','demo2']
+//             //     }))
             
-        })
-    }
-}
+//         })
+//     }
+// }

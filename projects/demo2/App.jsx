@@ -17,6 +17,7 @@ export default class App extends React.Component {
                 <br />
                 {this.state.name}
                 <img src={imgPath} alt="" srcSet="" />
+                <img src="/static/Android@2x.png" alt="" srcSet="" />
             </div>
         )
     }
