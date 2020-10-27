@@ -247,24 +247,26 @@ function singleMain(projectName){
                 removeComments: true,// 删除html注释
             }
         }))
-    
-    webpackChain.plugin('CopyWebpackPlugin')
-        .use(new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: path.join(projectPath, 'static'),
-                    to: config.assetsSubDirectory,
-                    // globOptions: { // 目前issue上有bug 不能设置ignore
-                    //     dot: true,
-                    //     gitignore: true,
-                    //     // ignore:  ['**/file.*', '**/ignored-directory/**'],
-                    // },
-                },{
-                    from:path.resolve(__dirname,'src/static'),
-                    to: config.assetsSubDirectory,
-                }
-            ]
-        } ) )
+        
+    if(fs.existsSync(path.join(projectPath, 'static'))){
+        webpackChain.plugin('CopyWebpackPlugin')
+            .use(new CopyWebpackPlugin({
+                patterns: [
+                    {
+                        from: path.join(projectPath, 'static'),
+                        to: config.assetsSubDirectory,
+                        // globOptions: { // 目前issue上有bug 不能设置ignore
+                        //     dot: true,
+                        //     gitignore: true,
+                        //     // ignore:  ['**/file.*', '**/ignored-directory/**'],
+                        // },
+                    },{
+                        from:path.resolve(__dirname,'src/static'),
+                        to: config.assetsSubDirectory,
+                    }
+                ]
+            } ) )
+    }
 
     webpackChain.plugin('ScriptExtHtmlWebpackPlugin')
         .use(new ScriptExtHtmlWebpackPlugin({
